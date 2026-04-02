@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express, { Application, Request, Response } from "express";
 import http from "http";
+import helmet from "helmet";
+import compression from "compression";
 import { matchRouter } from "./routes/matches";
 import { attachWebSocketServer } from "./ws/server";
 
@@ -11,6 +13,8 @@ const app: Application = express();
 const server = http.createServer(app);
 
 app.use(express.json());
+app.use(helmet);
+app.use(compression({ level: 6 }));
 
 app.get("/api/health", (_req: Request, res: Response) => {
   res.json({ message: "Server is healthy" });
