@@ -5,6 +5,7 @@ import helmet from "helmet";
 import compression from "compression";
 import { matchRouter } from "./routes/matches";
 import { attachWebSocketServer } from "./ws/server";
+import { apiLimiter } from "./middleware/rateLimit";
 
 const PORT = Number(process.env.PORT || 5000);
 const HOST = process.env.HOST || "0.0.0.0";
@@ -20,6 +21,7 @@ app.get("/api/health", (_req: Request, res: Response) => {
   res.json({ message: "Server is healthy" });
 });
 
+app.use("/api/", apiLimiter);
 app.use("/api/matches", matchRouter);
 
 const { broadcastMatchCreated } = attachWebSocketServer(server);
